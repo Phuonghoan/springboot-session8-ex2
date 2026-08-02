@@ -1,8 +1,10 @@
 package org.example.librarymanagement.service;
 
 import org.example.librarymanagement.dto.BookCreateDTO;
+import org.example.librarymanagement.dto.BookUpdateStockDTO;
 import org.example.librarymanagement.entity.Book;
 import org.example.librarymanagement.exception.FileStorageException;
+import org.example.librarymanagement.exception.ResourceNotFoundException;
 import org.example.librarymanagement.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,6 +83,22 @@ public class BookService {
                     exception
             );
         }
+    }
+
+    @Transactional
+    public Book updateBook(
+            Long id,
+            BookUpdateStockDTO dto
+    ) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Book with id " + id + " not found"
+                        )
+                );
+        book.setStock(dto.getStock());
+
+        return bookRepository.save(book);
     }
 
     private void validateImage(MultipartFile file) {

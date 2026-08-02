@@ -1,6 +1,7 @@
 package org.example.librarymanagement.controller;
 
 import org.example.librarymanagement.dto.BookCreateDTO;
+import org.example.librarymanagement.dto.BookUpdateStockDTO;
 import org.example.librarymanagement.entity.Book;
 import org.example.librarymanagement.service.BookService;
 import jakarta.validation.Valid;
@@ -33,5 +34,17 @@ public class BookController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(createdBook);
+    }
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<String> updateBookStock(
+            @PathVariable Long id,
+            @Valid @RequestBody BookUpdateStockDTO dto
+    ) {
+        bookService.updateBook(id, dto);
+
+        return ResponseEntity.ok(
+                "Book stock updated successfully"
+        );
     }
 }
